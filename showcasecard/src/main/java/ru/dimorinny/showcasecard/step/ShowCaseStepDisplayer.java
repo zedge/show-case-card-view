@@ -2,6 +2,7 @@ package ru.dimorinny.showcasecard.step;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.ScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dimorinny.showcasecard.R;
 import ru.dimorinny.showcasecard.ShowCaseView;
 import ru.dimorinny.showcasecard.radius.Radius;
 
@@ -29,7 +31,10 @@ public class ShowCaseStepDisplayer {
     private Fragment fragment;
     @Nullable
     private ScrollView scrollView;
+    @LayoutRes
+    private int customLayout = R.layout.item_show_case_content;
 
+    private boolean shouldDisplayProgress = false;
     private float showCaseRadius;
 
     /**
@@ -52,11 +57,12 @@ public class ShowCaseStepDisplayer {
      * @param scrollView scrollView to use on all {@link ShowCaseStep}'s that dictate
      *                   scrolling on activation.
      */
-    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView) {
-
+    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress) {
         this.activity = activity;
         this.fragment = fragment;
         this.scrollView = scrollView;
+        this.customLayout = layout;
+        this.shouldDisplayProgress = shouldDisplayProgress;
 
         //noinspection ConstantConditions
         this.context = activity != null ? activity : fragment.getContext();
@@ -155,6 +161,7 @@ public class ShowCaseStepDisplayer {
         final int myTipIndex = currentlyDisplayedTipIndex;
         showCaseView = new ShowCaseView.Builder(context)
                 .withTypedPosition(item.getPosition())
+                .setLayout(customLayout)
                 .withTypedRadius(new Radius(showCaseRadius))
                 .dismissOnTouch(false)
                 .withTouchListener(new ShowCaseView.TouchListener() {
@@ -165,9 +172,12 @@ public class ShowCaseStepDisplayer {
                         }
                     }
                 })
-                .withContent(item.getMessage())
+                .withContent(item.getTitle(), item.getMessage())
                 .build();
 
+        if (items.size() > 1 && shouldDisplayProgress) {
+            showCaseView.setProgressIndicator(currentlyDisplayedTipIndex, items.size());
+        }
         if (activity == null) {
             showCaseView.show(fragment);
         } else {
@@ -225,7 +235,11 @@ public class ShowCaseStepDisplayer {
         @Nullable
         private ScrollView scrollView;
 
+        @LayoutRes
+        private int customLayout;
+
         private List<ShowCaseStep> items = new ArrayList<>();
+        private boolean shouldDisplayProgress = false;
 
         @SuppressWarnings("unused")
         public Builder(@NonNull Fragment fragment) {
@@ -246,6 +260,16 @@ public class ShowCaseStepDisplayer {
             return this;
         }
 
+        public Builder withCustomLayout(@LayoutRes int layout) {
+            this.customLayout = layout;
+            return this;
+        }
+
+        public Builder setShouldDisplayProgress(boolean shouldDisplayProgress) {
+            this.shouldDisplayProgress = shouldDisplayProgress;
+            return this;
+        }
+
         /**
          * Adds on item to the list of items to display.
          *
@@ -261,7 +285,7 @@ public class ShowCaseStepDisplayer {
         public ShowCaseStepDisplayer build() {
 
             ShowCaseStepDisplayer stepController =
-                    new ShowCaseStepDisplayer(activity, fragment, scrollView);
+                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress);
 
             stepController.setSteps(items);
 

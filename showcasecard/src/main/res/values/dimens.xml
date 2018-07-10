@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="showcase_radius">70dp</dimen>
+    <dimen name="card_padding_vertical">16dp</dimen>
+    <dimen name="card_padding_horizontal">8dp</dimen>
+    <dimen name="progress_dot_padding">4dp</dimen>
 </resources>
