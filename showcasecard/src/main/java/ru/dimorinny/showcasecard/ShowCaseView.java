@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -69,7 +70,9 @@ public class ShowCaseView extends FrameLayout {
     private int cardRightOffset = 0;
     private int cardLeftOffset = 0;
 
-    private TextView cardContent;
+    private View cardContent;
+    private TextView titleView;
+    private TextView textView;
 
     /**
      * True to dismiss the card on touch/click. True by default.
@@ -101,9 +104,14 @@ public class ShowCaseView extends FrameLayout {
         circlePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
-    private void setContent(TextView contentView, String text) {
+    private void setContent(View contentView, String title, String text) {
         cardContent = contentView;
-        cardContent.setText(text);
+        textView = cardContent.findViewById(R.id.showcase_text);
+        titleView = cardContent.findViewById(R.id.showcase_title);
+        textView.setText(text);
+        if (titleView != null) {
+            titleView.setText(title);
+        }
     }
 
     private boolean isTouchInCircle(MotionEvent touchEvent) {
@@ -231,8 +239,8 @@ public class ShowCaseView extends FrameLayout {
     }
 
     private void configureCard(ViewGroup card) {
-        cardContent.setMaxWidth(getCardWidth());
-        cardContent.setPadding(
+        textView.setMaxWidth(getCardWidth());
+        textView.setPadding(
                 CARD_PADDING_VERTICAL,
                 CARD_PADDING_HORIZONTAL,
                 CARD_PADDING_VERTICAL,
@@ -260,8 +268,8 @@ public class ShowCaseView extends FrameLayout {
     private void showAfterMeasured(
             final Activity activity,
             final ViewGroup container,
-            View measuredView
-    ) {
+            View measuredView)
+    {
         MeasuredUtils.afterOrAlreadyMeasured(measuredView, new MeasuredUtils.OnMeasuredHandler() {
             @Override
             public void onMeasured() {
@@ -434,11 +442,15 @@ public class ShowCaseView extends FrameLayout {
 
         private Context context;
 
+        private int customLayout = R.layout.item_show_case_content;
         @ColorRes
         private int color = R.color.black20;
         private ShowCaseRadius radius = new Radius(128F);
-        private TextView contentView;
+        private View contentView;
+        private TextView textView;
+        private TextView titleView;
         private String contentText;
+        private String titleText;
         private boolean dismissOnTouch = true;
         @Nullable
         private TouchListener touchListener;
@@ -471,6 +483,17 @@ public class ShowCaseView extends FrameLayout {
             return this;
         }
 
+        public Builder setLayout(@LayoutRes int layout) {
+            customLayout = layout;
+            this.contentView = LayoutInflater.from(context).inflate(
+                    customLayout,
+                    null
+            );
+            this.textView = contentView.findViewById(R.id.showcase_text);
+            this.titleView = contentView.findViewById(R.id.showcase_title);
+            return this;
+        }
+
         /**
          * True to dismiss the card on touch/click. True by default.
          */
@@ -485,12 +508,15 @@ public class ShowCaseView extends FrameLayout {
         }
 
         @SuppressLint("InflateParams")
-        public Builder withContent(String cardText) {
-            this.contentView = (TextView) LayoutInflater.from(context).inflate(
-                    R.layout.item_show_case_content,
+        public Builder withContent(String cardTitle, String cardText) {
+            this.contentView = LayoutInflater.from(context).inflate(
+                     customLayout,
                     null
             );
+            this.textView = contentView.findViewById(R.id.showcase_text);
+            this.titleView = contentView.findViewById(R.id.showcase_title);
             this.contentText = cardText;
+            this.titleText = cardTitle;
 
             return this;
         }
@@ -505,7 +531,7 @@ public class ShowCaseView extends FrameLayout {
             view.overlayPaint.setColor(ContextCompat.getColor(context, this.color));
 
             if (this.contentView != null && contentText != null) {
-                view.setContent(this.contentView, this.contentText);
+                view.setContent(this.contentView, this.titleText, this.contentText);
             }
 
             return view;

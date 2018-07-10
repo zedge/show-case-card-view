@@ -17,6 +17,10 @@ public class ShowCaseStep {
      */
     private ShowCasePosition position;
     /**
+     * Title to display
+     */
+    private String title;
+    /**
      * Message to display when this item is activated.
      */
     private String message;
@@ -27,9 +31,8 @@ public class ShowCaseStep {
      * @param viewToShowCase showcase will point to this view
      * @param message        message to show
      */
-    public ShowCaseStep(@NonNull View viewToShowCase, String message) {
-        position = new ViewPosition(viewToShowCase);
-        this.message = message;
+    public ShowCaseStep(@NonNull View viewToShowCase, String title, String message) {
+        this(new ViewPosition(viewToShowCase), title, message);
     }
 
     /**
@@ -38,9 +41,10 @@ public class ShowCaseStep {
      * @param position position to point to
      * @param message  message to show
      */
-    public ShowCaseStep(ShowCasePosition position, String message) {
+    public ShowCaseStep(ShowCasePosition position, String title, String message) {
         this.position = position;
         this.message = message;
+        this.title = title;
     }
 
     /**
@@ -73,4 +77,6 @@ public class ShowCaseStep {
     public String getMessage() {
         return message;
     }
+
+    public String getTitle() { return title; }
 }

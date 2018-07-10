@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="20dp"
     xmlns:tools="http://schemas.android.com/tools">
     <ru.dimorinny.showcasecard.widget.WrapWidthTextView
         android:id="@+id/showcase_title"
