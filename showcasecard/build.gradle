@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-group = 'com.github.dimorinny'
+group = 'com.github.zedge'
 version = '0.0.4'
 
 android {
