@@ -61,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         new ShowCaseStepDisplayer.Builder(this)
                 .withScrollView(scrollView)
-                .addStep(new ShowCaseStep(new Center(), "This is the center of the screen. Tap anywhere to continue."))
-                .addStep(new ShowCaseStep(listOfSteps, "This is the button you just clicked."))
-                .addStep(new ShowCaseStep(dummyViewToScrollTo, "A dummy item to auto-scroll to."))
-                .addStep(new ShowCaseStep(topLeft, "We end our showcase at the top button."))
+                .withCustomLayout(R.layout.custom_showcase_layout)
+                .addStep(new ShowCaseStep(new Center(), "Center", "This is the center of the screen. Tap anywhere to continue."))
+                .addStep(new ShowCaseStep(listOfSteps, "Button", "This is the button you just clicked."))
+                .addStep(new ShowCaseStep(dummyViewToScrollTo, "AutoScroll","A dummy item to auto-scroll to."))
+                .addStep(new ShowCaseStep(topLeft, "TopLeft", "We end our showcase at the top button."))
                 .build().start();
     }
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         new ShowCaseView.Builder(MainActivity.this)
                 .withTypedPosition(position)
                 .withTypedRadius(radius)
-                .withContent(
+                .withContent("Title",
                         "This is hello world!"
                 )
                 .build()
