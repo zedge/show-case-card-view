@@ -104,10 +104,47 @@
             android:text="@string/list_of_steps"
             />
 
-        <View
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1000dp"
-            />
+            android:layout_height="1000dp">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="63dp"
+                android:layout_marginLeft="63dp"
+                android:layout_marginTop="20dp"
+                android:text="25 Button" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="129dp"
+                android:layout_marginLeft="129dp"
+                android:layout_marginTop="141dp"
+                android:text="50dp Button" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="362dp"
+                android:layout_marginRight="17dp"
+                android:text="150dp Button"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/dummy_view_to_scroll_to"

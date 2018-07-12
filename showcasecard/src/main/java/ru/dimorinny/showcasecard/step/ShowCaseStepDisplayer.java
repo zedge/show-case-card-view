@@ -15,6 +15,7 @@ import java.util.List;
 
 import ru.dimorinny.showcasecard.R;
 import ru.dimorinny.showcasecard.ShowCaseView;
+import ru.dimorinny.showcasecard.position.ViewPosition;
 import ru.dimorinny.showcasecard.radius.Radius;
 
 /**
@@ -38,7 +39,7 @@ public class ShowCaseStepDisplayer {
     private int backgroundColor;
 
     private boolean shouldDisplayProgress = false;
-    private float showCaseRadius;
+    private boolean radiusProportionalToView = false;
 
     /**
      * All items to be displayed.
@@ -60,18 +61,17 @@ public class ShowCaseStepDisplayer {
      * @param scrollView scrollView to use on all {@link ShowCaseStep}'s that dictate
      *                   scrolling on activation.
      */
-    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress, @ColorRes int backgroundColor) {
+    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress, @ColorRes int backgroundColor, boolean radiusProportionalToView) {
         this.activity = activity;
         this.fragment = fragment;
         this.scrollView = scrollView;
         this.customLayout = layout;
         this.shouldDisplayProgress = shouldDisplayProgress;
         this.backgroundColor = backgroundColor;
+        this.radiusProportionalToView = radiusProportionalToView;
 
         //noinspection ConstantConditions
         this.context = activity != null ? activity : fragment.getContext();
-        showCaseRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70,
-                context.getResources().getDisplayMetrics());
 
         if (scrollView != null) {
             showCaseStepScroller = new ShowCaseStepScroller(scrollView);
@@ -162,6 +162,13 @@ public class ShowCaseStepDisplayer {
             showCaseView.hide();
         }
 
+        int showCaseRadius = (int) context.getResources().getDimension(R.dimen.default_showcase_radius);
+
+        if (radiusProportionalToView && item.getPosition() instanceof ViewPosition) {
+            ViewPosition viewPosition = (ViewPosition) item.getPosition();
+            showCaseRadius = viewPosition.getView().getWidth();
+        }
+
         final int myTipIndex = currentlyDisplayedTipIndex;
         showCaseView = new ShowCaseView.Builder(context)
                 .withTypedPosition(item.getPosition())
@@ -246,6 +253,7 @@ public class ShowCaseStepDisplayer {
         private List<ShowCaseStep> items = new ArrayList<>();
         private boolean shouldDisplayProgress = false;
         private @ColorRes int backgroundColor = R.color.black20;
+        private boolean radiusProportionalToView;
 
         @SuppressWarnings("unused")
         public Builder(@NonNull Fragment fragment) {
@@ -277,6 +285,16 @@ public class ShowCaseStepDisplayer {
         }
 
         /**
+         * Set to true to make the radius of the circle proportional to the view
+         * @param radiusProportionalToView
+         * @return
+         */
+        public Builder setRadiusProportionalToView(boolean radiusProportionalToView) {
+            this.radiusProportionalToView = radiusProportionalToView;
+            return this;
+        }
+
+        /**
          * Sets the color of the background for a ShowCaseStep scenario
          * @param backgroundColor
          */
@@ -300,7 +318,7 @@ public class ShowCaseStepDisplayer {
         public ShowCaseStepDisplayer build() {
 
             ShowCaseStepDisplayer stepController =
-                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress, backgroundColor);
+                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress, backgroundColor, radiusProportionalToView);
 
             stepController.setSteps(items);
 

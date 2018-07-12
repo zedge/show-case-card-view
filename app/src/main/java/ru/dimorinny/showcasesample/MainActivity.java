@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private Button topRightToolbar;
     private Button viewPosition;
     private Button listOfSteps;
+    private Button button1;
+    private Button button2;
+    private Button button3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
         new ShowCaseStepDisplayer.Builder(this)
                 .withScrollView(scrollView)
                 .withCustomLayout(R.layout.custom_showcase_layout)
+                .setRadiusProportionalToView(true)
                 .addStep(new ShowCaseStep(new Center(), "Center", "This is the center of the screen. Tap anywhere to continue."))
-                .addStep(new ShowCaseStep(listOfSteps, "Button", "This is the button you just clicked."))
-                .addStep(new ShowCaseStep(dummyViewToScrollTo, "AutoScroll","A dummy item to auto-scroll to."))
-                .addStep(new ShowCaseStep(topLeft, "TopLeft", "We end our showcase at the top button."))
+                .addStep(new ShowCaseStep(button1, "Button", "This is the button you just clicked."))
+                .addStep(new ShowCaseStep(button2, "AutoScroll","A dummy item to auto-scroll to."))
+                .addStep(new ShowCaseStep(button3, "TopLeft", "We end our showcase at the top button."))
                 .build().start();
     }
 
@@ -78,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         topRightToolbar = findViewById(R.id.top_right_toolbar);
         viewPosition = findViewById(R.id.view_position);
         listOfSteps = findViewById(R.id.list_of_steps);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
     }
 
     private void showTipWithPosition(ShowCasePosition position) {
