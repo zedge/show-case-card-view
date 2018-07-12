@@ -3,6 +3,7 @@ package ru.dimorinny.showcasecard.step;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,8 @@ public class ShowCaseStepDisplayer {
     private ScrollView scrollView;
     @LayoutRes
     private int customLayout = R.layout.item_show_case_content;
+    @ColorRes
+    private int backgroundColor;
 
     private boolean shouldDisplayProgress = false;
     private float showCaseRadius;
@@ -57,12 +60,13 @@ public class ShowCaseStepDisplayer {
      * @param scrollView scrollView to use on all {@link ShowCaseStep}'s that dictate
      *                   scrolling on activation.
      */
-    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress) {
+    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress, @ColorRes int backgroundColor) {
         this.activity = activity;
         this.fragment = fragment;
         this.scrollView = scrollView;
         this.customLayout = layout;
         this.shouldDisplayProgress = shouldDisplayProgress;
+        this.backgroundColor = backgroundColor;
 
         //noinspection ConstantConditions
         this.context = activity != null ? activity : fragment.getContext();
@@ -164,6 +168,7 @@ public class ShowCaseStepDisplayer {
                 .setLayout(customLayout)
                 .withTypedRadius(new Radius(showCaseRadius))
                 .dismissOnTouch(false)
+                .withColor(backgroundColor)
                 .withTouchListener(new ShowCaseView.TouchListener() {
                     @Override
                     public void onTouchEvent() {
@@ -240,6 +245,7 @@ public class ShowCaseStepDisplayer {
 
         private List<ShowCaseStep> items = new ArrayList<>();
         private boolean shouldDisplayProgress = false;
+        private @ColorRes int backgroundColor = R.color.black20;
 
         @SuppressWarnings("unused")
         public Builder(@NonNull Fragment fragment) {
@@ -271,6 +277,15 @@ public class ShowCaseStepDisplayer {
         }
 
         /**
+         * Sets the color of the background for a ShowCaseStep scenario
+         * @param backgroundColor
+         */
+        public Builder withColor(@ColorRes int backgroundColor) {
+            this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        /**
          * Adds on item to the list of items to display.
          *
          * @param item
@@ -285,7 +300,7 @@ public class ShowCaseStepDisplayer {
         public ShowCaseStepDisplayer build() {
 
             ShowCaseStepDisplayer stepController =
-                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress);
+                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress, backgroundColor);
 
             stepController.setSteps(items);
 
