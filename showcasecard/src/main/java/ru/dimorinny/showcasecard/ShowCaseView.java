@@ -338,7 +338,7 @@ public class ShowCaseView extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
 
         if (touchListener != null) {
-            touchListener.onTouchEvent();
+            touchListener.onTouchEvent(isTouchInCircle(event));
         }
 
         if (dismissOnTouch) {
@@ -347,7 +347,7 @@ public class ShowCaseView extends FrameLayout {
             }
             hide();
         }
-        return !isTouchInCircle(event);
+        return !isTouchInCircle(event) || touchListener != null;
     }
 
     public void show(final ViewGroup container) {
@@ -430,7 +430,7 @@ public class ShowCaseView extends FrameLayout {
 
     public interface TouchListener {
 
-        void onTouchEvent();
+        void onTouchEvent(boolean touchedCircle);
     }
 
     public static class Builder {

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import ru.dimorinny.showcasecard.ShowCaseView;
 import ru.dimorinny.showcasecard.position.BottomLeft;
@@ -21,7 +22,7 @@ import ru.dimorinny.showcasecard.radius.ShowCaseRadius;
 import ru.dimorinny.showcasecard.step.ShowCaseStepDisplayer;
 import ru.dimorinny.showcasecard.step.ShowCaseStep;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ShowCaseStepDisplayer.ViewClickedListener {
 
     private ScrollView scrollView;
     private View dummyViewToScrollTo;
@@ -70,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
                 .addStep(new ShowCaseStep(button1, "Button", "This is the button you just clicked."))
                 .addStep(new ShowCaseStep(button2, "AutoScroll","A dummy item to auto-scroll to."))
                 .addStep(new ShowCaseStep(button3, "TopLeft", "We end our showcase at the top button."))
+                .withClickViewListener(this)
                 .build().start();
+    }
+
+    @Override
+    public void onViewClicked(ShowCaseView view) {
+        Toast.makeText(getApplicationContext(), "ViewClicked" + view.getClass().getName(), Toast.LENGTH_LONG).show();
     }
 
     private void initButtons() {
