@@ -183,12 +183,14 @@ public class ShowCaseStepDisplayer {
                     @Override
                     public void onTouchEvent(boolean clickedCircle) {
                         if (clickedCircle && viewClickedListener != null) {
-                            dismiss();
-                            viewClickedListener.onViewClicked(showCaseView);
-                        } else {
-                            if (myTipIndex == currentlyDisplayedTipIndex) {
-                                tryShowNextTip();
+                            if(viewClickedListener.onViewClicked(showCaseView)) {
+                               dismiss();
+                               return;
                             }
+                        }
+
+                        if (myTipIndex == currentlyDisplayedTipIndex) {
+                            tryShowNextTip();
                         }
                     }
                 })
@@ -341,6 +343,6 @@ public class ShowCaseStepDisplayer {
     }
     
     public interface ViewClickedListener {
-        void onViewClicked(ShowCaseView view);
+        boolean onViewClicked(ShowCaseView view);
     }
 }
