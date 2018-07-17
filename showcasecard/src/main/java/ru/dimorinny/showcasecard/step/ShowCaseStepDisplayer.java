@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.ScrollView;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import ru.dimorinny.showcasecard.radius.Radius;
  */
 public class ShowCaseStepDisplayer {
 
+    private final ViewClickedListener viewClickedListener;
     private Context context;
 
     @Nullable
@@ -61,7 +63,7 @@ public class ShowCaseStepDisplayer {
      * @param scrollView scrollView to use on all {@link ShowCaseStep}'s that dictate
      *                   scrolling on activation.
      */
-    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress, @ColorRes int backgroundColor, boolean radiusProportionalToView) {
+    private ShowCaseStepDisplayer(@Nullable Activity activity, @Nullable Fragment fragment, @Nullable ScrollView scrollView, @LayoutRes int layout, boolean shouldDisplayProgress, @ColorRes int backgroundColor, boolean radiusProportionalToView, ViewClickedListener viewClickedListener) {
         this.activity = activity;
         this.fragment = fragment;
         this.scrollView = scrollView;
@@ -69,6 +71,7 @@ public class ShowCaseStepDisplayer {
         this.shouldDisplayProgress = shouldDisplayProgress;
         this.backgroundColor = backgroundColor;
         this.radiusProportionalToView = radiusProportionalToView;
+        this.viewClickedListener = viewClickedListener;
 
         //noinspection ConstantConditions
         this.context = activity != null ? activity : fragment.getContext();
@@ -178,9 +181,14 @@ public class ShowCaseStepDisplayer {
                 .withColor(backgroundColor)
                 .withTouchListener(new ShowCaseView.TouchListener() {
                     @Override
-                    public void onTouchEvent() {
-                        if (myTipIndex == currentlyDisplayedTipIndex) {
-                            tryShowNextTip();
+                    public void onTouchEvent(boolean clickedCircle) {
+                        if (clickedCircle && viewClickedListener != null) {
+                            dismiss();
+                            viewClickedListener.onViewClicked(showCaseView);
+                        } else {
+                            if (myTipIndex == currentlyDisplayedTipIndex) {
+                                tryShowNextTip();
+                            }
                         }
                     }
                 })
@@ -254,6 +262,7 @@ public class ShowCaseStepDisplayer {
         private boolean shouldDisplayProgress = false;
         private @ColorRes int backgroundColor = R.color.black20;
         private boolean radiusProportionalToView;
+        private ViewClickedListener viewClickedListener = null;
 
         @SuppressWarnings("unused")
         public Builder(@NonNull Fragment fragment) {
@@ -281,6 +290,11 @@ public class ShowCaseStepDisplayer {
 
         public Builder setShouldDisplayProgress(boolean shouldDisplayProgress) {
             this.shouldDisplayProgress = shouldDisplayProgress;
+            return this;
+        }
+        
+        public Builder withClickViewListener(ViewClickedListener listener) {
+            this.viewClickedListener = listener;
             return this;
         }
 
@@ -318,11 +332,15 @@ public class ShowCaseStepDisplayer {
         public ShowCaseStepDisplayer build() {
 
             ShowCaseStepDisplayer stepController =
-                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress, backgroundColor, radiusProportionalToView);
+                    new ShowCaseStepDisplayer(activity, fragment, scrollView, customLayout, shouldDisplayProgress, backgroundColor, radiusProportionalToView, viewClickedListener);
 
             stepController.setSteps(items);
 
             return stepController;
         }
+    }
+    
+    public interface ViewClickedListener {
+        void onViewClicked(ShowCaseView view);
     }
 }
