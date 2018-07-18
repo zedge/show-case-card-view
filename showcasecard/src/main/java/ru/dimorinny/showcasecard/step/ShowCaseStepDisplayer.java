@@ -154,8 +154,7 @@ public class ShowCaseStepDisplayer {
         }
     }
 
-    private void doDisplayTip(ShowCaseStep item) {
-
+    private void doDisplayTip(final ShowCaseStep item) {
         if (!isContextActive()) {
             return;
         }
@@ -183,7 +182,11 @@ public class ShowCaseStepDisplayer {
                     @Override
                     public void onTouchEvent(boolean clickedCircle) {
                         if (clickedCircle && viewClickedListener != null) {
-                            if(viewClickedListener.onViewClicked(showCaseView)) {
+                            View clickedView = null;
+                            if (item.getPosition() instanceof ViewPosition) {
+                                clickedView = ((ViewPosition) item.getPosition()).getView();
+                            }
+                            if(viewClickedListener.onViewClicked(clickedView)) {
                                dismiss();
                                return;
                             }
@@ -343,6 +346,6 @@ public class ShowCaseStepDisplayer {
     }
     
     public interface ViewClickedListener {
-        boolean onViewClicked(ShowCaseView view);
+        boolean onViewClicked(View view);
     }
 }

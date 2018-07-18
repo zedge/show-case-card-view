@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ShowCaseStepDispl
     }
 
     @Override
-    public boolean onViewClicked(ShowCaseView view) {
+    public boolean onViewClicked(View view) {
         Toast.makeText(getApplicationContext(), "ViewClicked" + view.getClass().getName(), Toast.LENGTH_LONG).show();
         return true;
     }
