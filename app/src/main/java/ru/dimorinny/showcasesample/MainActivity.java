@@ -19,8 +19,8 @@ import ru.dimorinny.showcasecard.position.TopRightToolbar;
 import ru.dimorinny.showcasecard.position.ViewPosition;
 import ru.dimorinny.showcasecard.radius.Radius;
 import ru.dimorinny.showcasecard.radius.ShowCaseRadius;
-import ru.dimorinny.showcasecard.step.ShowCaseStepDisplayer;
 import ru.dimorinny.showcasecard.step.ShowCaseStep;
+import ru.dimorinny.showcasecard.step.ShowCaseStepDisplayer;
 
 public class MainActivity extends AppCompatActivity implements ShowCaseStepDisplayer.ViewClickedListener {
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ShowCaseStepDispl
 
     @Override
     public boolean onViewClicked(View view) {
-        Toast.makeText(getApplicationContext(), "ViewClicked" + view.getClass().getName(), Toast.LENGTH_LONG).show();
+        if (view != null) Toast.makeText(getApplicationContext(), "ViewClicked" + view.getClass().getName(), Toast.LENGTH_LONG).show();
         return true;
     }
 

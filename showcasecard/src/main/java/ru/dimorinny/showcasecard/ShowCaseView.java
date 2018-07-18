@@ -336,6 +336,7 @@ public class ShowCaseView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() != MotionEvent.ACTION_UP) return true;
 
         if (touchListener != null) {
             touchListener.onTouchEvent(isTouchInCircle(event));
